@@ -10,14 +10,15 @@ class WomenAdmin(admin.ModelAdmin):
     search_fields = ('title', 'content')                 # Поля для поиска
     list_editable = ('is_published',)                    # Список редактируемых полей
     list_filter = ('is_published', 'time_create')        # Поля для фильтрации
+    prepopulated_fields = {"slug": ("title",)}           # Автоматически заполнять поле slug на основе поля title
 
 
 class CategoryAdmin(admin.ModelAdmin):
     """Класс-редактор для задания параметров представления модели"""
-    list_display = ('id', 'name')  # Поля, которые выводятся в списке записей
-    list_display_links = ('id', 'name')                 # Поля, которые преобразуются в гиперссылки для правки записей
-    search_fields = ('name',)                 # Поля для фильтрации
-
+    list_display = ('id', 'name')              # Поля, которые выводятся в списке записей
+    list_display_links = ('id', 'name')        # Поля, которые преобразуются в гиперссылки для правки записей
+    search_fields = ('name',)                  # Поля для фильтрации
+    prepopulated_fields = {"slug": ("name",)}  # Автоматически заполнять поле slug на основе поля name
 
 admin.site.register(Women, WomenAdmin)
 admin.site.register(Category, CategoryAdmin)
