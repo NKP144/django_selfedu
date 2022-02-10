@@ -39,14 +39,20 @@ def archive(request, year):
 
 def addpage(request):
     if request.method == 'POST':            # Проверка метода запроса. Если ответ из формы, то метод будет POST
-        form = AddPostForm(request.POST)        # Заполняем форму данными из запроса
+        form = AddPostForm(request.POST, request.FILES)        # Заполняем форму данными из запроса и файлами
         if form.is_valid():                     # Проверка валидности данных формы
+            # ----------------------------------------------------------------------------------------------------------
+            # Проверка на ошибки не требуется т.к. методо form.save() делает это самостоятельно
             # print(form.cleaned_data)            # Если валидные данные, то отобразить данные в консоле
-            try:
-                Women.objects.create(**form.cleaned_data)  # Добавляем в базу данных запись
-                return redirect('home_page')               # Возврат на главную страницу
-            except:
-                form.add_error(None, 'Ошибка добавления поста')  # Добавили общую ошибка для отображения формы
+            # try:
+            #    # Women.objects.create(**form.cleaned_data)  # Добавляем в базу данных запись. Для формы не связанной с моделью
+            #    form.save()  # хранение данных формы в базу данных. Для формы связанной с моделью
+            #    return redirect('home_page')               # Возврат на главную страницу
+            # except:
+            #    form.add_error(None, 'Ошибка добавления поста')  # Добавили общую ошибка для отображения формы
+            # ----------------------------------------------------------------------------------------------------------
+            form.save()
+            return redirect('home_page')
     else:                                   # Если первая отправка формы на страницу (в запросе метод = None)
         form = AddPostForm()                    # Взять чистую форму
     return render(request, 'women/addpage.html', {'form': form, 'menu': menu, 'title': 'Добавление статьи'})
