@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 
+from .forms import *
 from .models import *
 
 menu = [{'title': "О сайте", 'url_name': 'about'},
@@ -37,7 +38,18 @@ def archive(request, year):
 
 
 def addpage(request):
-    return HttpResponse("Добавление статьи")
+    if request.method == 'POST':            # Проверка метода запроса. Если ответ из формы, то метод будет POST
+        form = AddPostForm(request.POST)        # Заполняем форму данными из запроса
+        if form.is_valid():                     # Проверка валидности данных формы
+            # print(form.cleaned_data)            # Если валидные данные, то отобразить данные в консоле
+            try:
+                Women.objects.create(**form.cleaned_data)  # Добавляем в базу данных запись
+                return redirect('home_page')               # Возврат на главную страницу
+            except:
+                form.add_error(None, 'Ошибка добавления поста')  # Добавили общую ошибка для отображения формы
+    else:                                   # Если первая отправка формы на страницу (в запросе метод = None)
+        form = AddPostForm()                    # Взять чистую форму
+    return render(request, 'women/addpage.html', {'form': form, 'menu': menu, 'title': 'Добавление статьи'})
 
 
 def contact(request):
