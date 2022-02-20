@@ -22,7 +22,7 @@ from women.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    ##path('women/', include('women.urls')),  # http://127.0.0.1:8000/women/
+    path('captcha/', include('captcha.urls')),
     path('', include('women.urls')),  # http://127.0.0.1:8000/women/
 ]
 
